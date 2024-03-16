@@ -14,7 +14,7 @@ __kernel void HelloWorld(__global int* argument1, __global int* argument2, __glo
 	//TODO: perform the required calculation
 	//printf("Hello World\n");
 
-	output[workItemNum] = workItemNum*arg1+arg2;
+	output[global_addr] = global_addr*arg1+arg2;
 
 	//TODO: print the work item, work group and arguments
 	/*
@@ -37,10 +37,10 @@ __kernel void HelloWorld(__global int* argument1, __global int* argument2, __glo
 	Hi from work item: 15 	 work group:3 	 Arg1: 10 	 Arg2: 20 	 Output: 170 
 	*/
 
-	printf("Hi from work item: %-2d work group:%d Arg1: %d Arg2: %d Output: %d \n",workItemNum,workGroupNum,arg1,arg2,output[workItemNum]);
+	printf("Hi from work item: %-2d work group:%d Arg1: %d Arg2: %d Output: %d \n",global_addr,workGroupNum,arg1,arg2,output[global_addr]);
 
 	// Makes space between output for Task 2 and Task 3
-	if(workItemNum == get_global_size(0) - 1){
+	if(global_addr == get_global_size(0) - 1){
     printf("\n");}
 
 	//barrier that stops all work items here until all work items in the work group have executed this function
@@ -58,10 +58,10 @@ __kernel void HelloWorld(__global int* argument1, __global int* argument2, __glo
 	
 	if(localGroupID==0){
 	
-		for(int i = workItemNum ; i<workItemNum+get_local_size(0); i++){
+		for(int i = global_addr ; i<global_addr+get_local_size(0); i++){
 			groupValue+=output[i];
 		}
-		printf("groupValue: %-3d   Work item:%-2d   Work group: %d \n", groupValue, workItemNum, workGroupNum);
+		printf("groupValue: %-3d   Work item:%-2d   Work group: %d \n", groupValue, global_addr, workGroupNum);
 	}
 	
 }
