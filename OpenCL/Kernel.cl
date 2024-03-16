@@ -4,6 +4,7 @@ __kernel void HelloWorld(__global int* argument1, __global int* argument2, __glo
 	int workGroupNum = get_group_id(0); //Work group ID
 	int localGroupID = get_local_id(0); //Work items ID within each work group
 	
+	
 	//memory buffers
 	int arg1 = *argument1;
 	int arg2 = *argument2;
@@ -12,6 +13,7 @@ __kernel void HelloWorld(__global int* argument1, __global int* argument2, __glo
 	//short calculation: work Item Number x argument 1 + argument 2
 	//TODO: perform the required calculation
 	//printf("Hello World\n");
+
 	output[workItemNum] = workItemNum*arg1+arg2;
 
 	//TODO: print the work item, work group and arguments
@@ -36,18 +38,10 @@ __kernel void HelloWorld(__global int* argument1, __global int* argument2, __glo
 	*/
 
 	printf("Hi from work item: %-2d work group:%d Arg1: %d Arg2: %d Output: %d \n",workItemNum,workGroupNum,arg1,arg2,output[workItemNum]);
-	
-	__local  int output_sum = 0;// stores the sum in a workgroup 
-	if(workItemNum==0){
-		//find the item in the current group (maybe their ids)
-		//then get the outputs and add them 
-		//print the results
-		
-		output_sum+=output[workItemNum];
-		printf("groupValue: %d   Work item:%d  Work group: %d \n",output_sum,workItemNum,workGroupNum);
-	}
-	
-	
+
+	// Makes space between output for Task 2 and Task 3
+	if(workItemNum == get_global_size(0) - 1){
+    printf("\n");}
 
 	//barrier that stops all work items here until all work items in the work group have executed this function
 	barrier(CLK_LOCAL_MEM_FENCE);
@@ -62,6 +56,13 @@ __kernel void HelloWorld(__global int* argument1, __global int* argument2, __glo
 	//groupValue: 460 	 Work item:8 	 Work group: 2 
 	//--------------------------------------------------------------------------------
 	
+	if(localGroupID==0){
+	
+		for(int i = workItemNum ; i<workItemNum+get_local_size(0); i++){
+			groupValue+=output[i];
+		}
+		printf("groupValue: %-3d   Work item:%-2d   Work group: %d \n", groupValue, workItemNum, workGroupNum);
+	}
 	
 }
 
