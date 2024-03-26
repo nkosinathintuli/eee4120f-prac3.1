@@ -1,6 +1,6 @@
 PROJ=main
 
-CC=g++
+CXX=g++
 
 # Linux OS
 LIBS=-lOpenCL
@@ -10,7 +10,7 @@ INC_DIRS=/user/local/cuda/include
 LIB_DIRS=/user/lib/nvidia-current
 
 $(PROJ): $(PROJ).cpp
-	$(CC) -o $@ $^ $(INC_DIRS:%=-I%) $(LIB_DIRS:%=-L%) $(LIBS)
+	$(CXX) -o $@ $^ $(INC_DIRS:%=-I%) $(LIB_DIRS:%=-L%) $(LIBS)
 
 clean:
 	rm $(PROJ)
