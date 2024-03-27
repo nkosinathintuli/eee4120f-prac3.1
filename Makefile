@@ -1,4 +1,5 @@
 PROJ=main
+PLAT=platforms
 
 CXX=g++
 
@@ -9,11 +10,19 @@ LIBS=-lOpenCL
 INC_DIRS=/user/local/cuda/include
 LIB_DIRS=/user/lib/nvidia-current
 
-$(PROJ): $(PROJ).cpp
+#all: $(PROJ) $(PLAT)
+
+$(PROJ):$(PROJ).cpp
 	$(CXX) -o $@ $^ $(INC_DIRS:%=-I%) $(LIB_DIRS:%=-L%) $(LIBS)
 
-clean:
-	rm $(PROJ)
+$(PLAT):$(PLAT).cpp
+	$(CXX) -o $@ $^ $(INC_DIRS:%=-I%) $(LIB_DIRS:%=-L%) $(LIBS)
 
-run:
+run_main: $(PROJ)
 	./$(PROJ)
+
+run_plat: $(PLAT)
+	./$(PLAT)
+
+clean:
+	rm -f $(PROJ) $(PLAT)

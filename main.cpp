@@ -15,20 +15,18 @@ int main(void)
 	//cl_program program;  steps 4,5 and 6
 	//cl_kernel kernel; step 7
 	//cl_command_queue queue; step 8
-	
+
 	//------------------------------------------------------------------------
-	 
-	 
+
 	//Initialize Buffers, memory space the allows for communication between the host and the target device
 	cl_mem argument1_buffer, argument2_buffer, output_buffer;
 
 	//***step 1*** Get the platform you want to use
-	cl_int clGetPlatformIDs(cl_uint num_entries,
-					cl_platform_id *platforms, 
-					cl_uint *num_platforms);
-  	
-    	//------------------------------------------------------------------------
-    
+	//cl_int clGetPlatformIDs(cl_uint num_entries,
+	//				cl_platform_id *platforms,
+	//				cl_uint *num_platforms);
+    //------------------------------------------------------------------------
+
 	cl_uint platformCount; //keeps track of the number of platforms you have installed on your device
 	cl_platform_id *platforms;
 	// get platform count
@@ -37,11 +35,11 @@ int main(void)
 	// get all platforms
 	platforms = (cl_platform_id*) malloc(sizeof(cl_platform_id) * platformCount);
 	clGetPlatformIDs(platformCount, platforms, NULL); //saves a list of platforms in the platforms variable
-    
+
 	//TODO code 1: select the platform you wish to use
 	//Select the platform you would like to use in this program (change index to do this). If you would like to see all available platforms run platform.cpp.
 	 cl_platform_id platform = platforms[0];
-	
+
 	//Outputs the information of the chosen platform
 	char* Info = (char*)malloc(0x1000*sizeof(char));
 	clGetPlatformInfo(platform, CL_PLATFORM_NAME      , 0x1000, Info, 0);
@@ -52,19 +50,19 @@ int main(void)
 	printf("Version   : %s\n", Info);
 	clGetPlatformInfo(platform, CL_PLATFORM_PROFILE   , 0x1000, Info, 0);
 	printf("Profile   : %s\n", Info);
-	
+
 	//------------------------------------------------------------------------
 
 	//***step 2*** get device ID must first get platform
-	cl_int clGetDeviceIDs(cl_platform_id platform,
-				cl_device_type device_type, 
-				cl_uint num_entries, 
-				cl_device_id *devices, 
-				cl_uint *num_devices);
-	
+	//cl_int clGetDeviceIDs(cl_platform_id platform,
+	//			cl_device_type device_type,
+	//			cl_uint num_entries,
+	//			cl_device_id *devices,
+	//			cl_uint *num_devices);
+
 	cl_device_id device; //this is your deviceID
 	cl_int err;
-	
+
 	/* Access a device */
 	//The if statement checks to see if the chosen platform uses a GPU, if not it setups the device using the CPU
 	//TODO code 2: select your device
@@ -109,11 +107,11 @@ int main(void)
 	//------------------------------------------------------------------------
 
 	//***Step 5*** create program from source because the kernel is in a separate file 'kernel.cl', therefore the compiler must run twice once on main and once on kernel
-	cl_program clCreateProgramWithSource (cl_context context,
-							cl_uint count, 
-							const char **strings, 
-							const size_t *lengths, 
-							cl_int *errcode_ret);	
+	// cl_program clCreateProgramWithSource (cl_context context,
+	// 						cl_uint count, 
+	// 						const char **strings, 
+	// 						const size_t *lengths, 
+	// 						cl_int *errcode_ret);	
 	
 	//TODO code 5: create the .cl program from the source code 
 	 cl_program program = clCreateProgramWithSource(context, 1, (const char**)&program_buffer, &program_size, NULL);
@@ -121,12 +119,12 @@ int main(void)
 	//------------------------------------------------------------------------
 
 	//***Step 6*** build the program, this compiles the source code from above for the devices that the code has to run on (ie GPU or CPU)
-	cl_int clBuildProgram(cl_program program,
-			cl_uint num_devices,
-			const cl_device_id* device_list,
-			const char* options,
-			void (CL_CALLBACK* pfn_notify)(cl_program program, void* user_data),
-			void* user_data);
+	// cl_int clBuildProgram(cl_program program,
+	// 		cl_uint num_devices,
+	// 		const cl_device_id* device_list,
+	// 		const char* options,
+	// 		void (CL_CALLBACK* pfn_notify)(cl_program program, void* user_data),
+	// 		void* user_data);
 	
 	//TODO code 6: compile the source code obtained in step 5
 	cl_int err3 = clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
@@ -136,19 +134,19 @@ int main(void)
 	//------------------------------------------------------------------------
 
 	//***Step 7*** creates the kernel, this creates a kernel from one of the functions in the cl_program you just built
-	cl_kernel clCreateKernel(cl_program program,
-				const char* kernel_name,
-				cl_int* errcode_ret);
+	// cl_kernel clCreateKernel(cl_program program,
+	// 			const char* kernel_name,
+	// 			cl_int* errcode_ret);
 	//TODO code 7: create the kernel
 	cl_kernel kernel = clCreateKernel(program, "HelloWorld", &err);
 
 	//------------------------------------------------------------------------
 	
 	//***Step 8*** create command queue to the target device. This is the queue that the kernels get dispatched too, to get the the desired device.
-	cl_command_queue clCreateCommandQueue(cl_context context,
-							cl_device_id device, 
-							cl_command_queue_properties properties,
-							cl_int *errcode_ret);
+	// cl_command_queue clCreateCommandQueue(cl_context context,
+	// 						cl_device_id device, 
+	// 						cl_command_queue_properties properties,
+	// 						cl_int *errcode_ret);
 	
 	//TODO code 8: create the queue
 	cl_command_queue queue = clCreateCommandQueueWithProperties(context, device, 0, NULL);
@@ -168,11 +166,11 @@ int main(void)
    
 	
 	//Buffer (memory block) that both the host and target device can access 
-	cl_mem clCreateBuffer(cl_context context,
-			cl_mem_flags flags,
-			size_t size,
-			void* host_ptr,
-			cl_int* errcode_ret);
+	// cl_mem clCreateBuffer(cl_context context,
+	// 		cl_mem_flags flags,
+	// 		size_t size,
+	// 		void* host_ptr,
+	// 		cl_int* errcode_ret);
 	
 	//TODO code 9.2: Create the buffer for argument 1
 	argument1_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(int), &argument1, &err);
@@ -185,29 +183,29 @@ int main(void)
 	//------------------------------------------------------------------------
 
 	//***Step 10*** create the arguments for the kernel (link these to the buffers set above, using the pointers for the respective buffers)
-	cl_int clSetKernelArg (cl_kernel kernel, 
-					cl_uint arg_index, 
-					size_t arg_size, 
-					const void *arg_value);
+	// cl_int clSetKernelArg (cl_kernel kernel, 
+	// 				cl_uint arg_index, 
+	// 				size_t arg_size, 
+	// 				const void *arg_value);
+
 	//TODO code 10: create the arguments for the kernel
 	clSetKernelArg(kernel, 0, sizeof(cl_mem), &argument1_buffer); 
 	clSetKernelArg(kernel, 1, sizeof(cl_mem), &argument2_buffer); 
 	clSetKernelArg(kernel, 2, sizeof(cl_mem), &output_buffer);
 
-
 	//------------------------------------------------------------------------
 
 	//***Step 11*** enqueue kernel, deploys the kernels and determines the number of work-items that should be generated to execute the kernel (global_size) and the number of work-items in each work-group (local_size).
 	
-	cl_int clEnqueueNDRangeKernel (cl_command_queue command_queue, 
-						cl_kernel kernel, 
-						cl_uint work_dim, 
-						const size_t *global_work_offset, 
-						const size_t *global_work_size, 
-						const size_t *local_work_size, 
-						cl_uint num_events_in_wait_list, 
-						const cl_event *event_wait_list, 
-						cl_event *event);
+	// cl_int clEnqueueNDRangeKernel (cl_command_queue command_queue, 
+	// 					cl_kernel kernel, 
+	// 					cl_uint work_dim, 
+	// 					const size_t *global_work_offset, 
+	// 					const size_t *global_work_size, 
+	// 					const size_t *local_work_size, 
+	// 					cl_uint num_events_in_wait_list, 
+	// 					const cl_event *event_wait_list, 
+	// 					cl_event *event);
 	//TODO code 11: deploy kernel and set work groups
     
 	cl_int err4 = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &global_size, &local_size, 0, NULL, NULL);
