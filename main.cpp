@@ -3,7 +3,6 @@
 
 #include<stdio.h>
 #include<CL/cl.h>
-#include <queue>
 
 using namespace std;
 
