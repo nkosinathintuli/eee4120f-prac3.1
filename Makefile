@@ -7,8 +7,8 @@ CXX=g++
 LIBS=-lOpenCL
 
 
-#all: $(PROJ) $(PLAT)
-#.PHONY main
+all: $(PROJ) $(PLAT)
+#.PHONY: main
 
 $(PROJ):$(PROJ).cpp
 	$(CXX) -o $@ $^ $(LIBS)
@@ -16,10 +16,10 @@ $(PROJ):$(PROJ).cpp
 $(PLAT):$(PLAT).cpp
 	$(CXX) -o $@ $^ $(LIBS)
 
-run_main: $(PROJ)
+runmain: $(PROJ)
 	./$(PROJ)
 
-run_plat: $(PLAT)
+plat: $(PLAT)
 	./$(PLAT)
 
 clean:
